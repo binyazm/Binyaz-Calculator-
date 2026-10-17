@@ -1,0 +1,12 @@
+{
+  "name": "Binyaz Calculator",
+  "short_name": "Binyaz",
+  "description": "Binyaz Scientific Calculator",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080808",
+  "theme_color": "#FFD400"
+}
