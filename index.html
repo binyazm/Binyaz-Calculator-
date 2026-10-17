@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#FFD400">
+<meta name="description" content="Binyaz Scientific Calculator">
+<link rel="manifest" href="./manifest.json">
+<title>Binyaz Calculator</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:#080808;
+color:white;
+font-family:Arial,sans-serif;
+}
+.app{
+max-width:520px;
+margin:auto;
+padding:15px;
+}
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #333;
+padding:10px 0 18px;
+}
+.brand{
+color:#FFD400;
+font-size:23px;
+font-weight:bold;
+}
+.sub{
+color:#999;
+font-size:11px;
+margin-top:6px;
+}
+.logo{
+background:#FFD400;
+color:black;
+font-size:28px;
+font-weight:bold;
+width:48px;
+height:48px;
+border-radius:12px;
+display:grid;
+place-items:center;
+}
+.display{
+background:#171717;
+border:1px solid #333;
+border-radius:18px;
+margin:18px 0;
+padding:18px;
+min-height:145px;
+}
+#mode{
+color:#FFD400;
+font-size:12px;
+}
+#expression{
+font-size:27px;
+text-align:right;
+margin-top:20px;
+overflow-wrap:anywhere;
+}
+#result{
+font-size:35px;
+font-weight:bold;
+color:#FFD400;
+text-align:right;
+margin-top:12px;
+overflow-wrap:anywhere;
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(5,minmax(0,1fr));
+gap:8px;
+}
+button{
+min-width:0;
+height:53px;
+background:#242424;
+color:white;
+border:1px solid #333;
+border-radius:12px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+button:active{
+transform:scale(.96);
+}
+.fn{color:#FFD400}
+.op{
+color:#FFD400;
+border-color:#665500;
+}
+.clear{
+background:#392F00;
+color:#FFD400;
+}
+.equal{
+background:#FFD400;
+color:black;
+font-size:25px;
+}
+.small{font-size:12px}
+.history{
+background:#171717;
+border-radius:13px;
+padding:14px;
+margin-top:18px;
+}
+.history-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:#FFD400;
+font-size:13px;
+font-weight:bold;
+}
+.history-title button{
+height:30px;
+font-size:12px;
+padding:0 12px;
+}
+#history{
+margin-top:12px;
+max-height:160px;
+overflow:auto;
+font-size:13px;
+color:#bbb;
+}
+.history-item{
+border-bottom:1px solid #333;
+padding:9px 0;
+text-align:right;
+overflow-wrap:anywhere;
+}
+footer{
+text-align:center;
+color:#666;
+font-size:10px;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+<div>
+<div class="brand">BINYAZ CALCULATOR</div>
+<div class="sub">SCIENTIFIC CALCULATOR</div>
+</div>
+<div class="logo">B</div>
+</header>
+
+<div class="display">
+<div id="mode">DEG · SCIENTIFIC</div>
+<div id="expression">0</div>
+<div id="result">0</div>
+</div>
+
+<div class="grid" id="keys">
+
+<button class="clear" data-k="AC">AC</button>
+<button class="clear" data-k="DEL">DEL</button>
+<button class="fn" data-k="(">(</button>
+<button class="fn" data-k=")">)</button>
+<button class="op" data-k="/">÷</button>
+
+<button class="fn" data-f="sin">sin</button>
+<button class="fn" data-f="cos">cos</button>
+<button class="fn" data-f="tan">tan</button>
+<button class="fn" data-f="sqrt">√</button>
+<button class="op" data-k="*">×</button>
+
+<button class="fn" data-f="asin">sin⁻¹</button>
+<button class="fn" data-f="acos">cos⁻¹</button>
+<button class="fn" data-f="atan">tan⁻¹</button>
+<button class="fn" data-k="square">x²</button>
+<button class="op" data-k="-">−</button>
+
+<button data-k="7">7</button>
+<button data-k="8">8</button>
+<button data-k="9">9</button>
+<button class="fn" data-k="^">xʸ</button>
+<button class="op" data-k="+">+</button>
+
+<button data-k="4">4</button>
+<button data-k="5">5</button>
+<button data-k="6">6</button>
+<button class="fn" data-f="log">log</button>
+<button class="fn" data-k="%">%</button>
+
+<button data-k="1">1</button>
+<button data-k="2">2</button>
+<button data-k="3">3</button>
+<button class="fn" data-f="ln">ln</button>
+<button class="fn" data-k="!">n!</button>
+
+<button class="fn" data-k="sign">±</button>
+<button data-k="0">0</button>
+<button data-k=".">.</button>
+<button class="fn" data-k="pi">π</button>
+<button class="fn" data-k="e">e</button>
+
+<button class="fn" data-f="cbrt">∛</button>
+<button class="fn" data-k="inv">1/x</button>
+<button class="fn" data-k="ans">Ans</button>
+<button class="op small" data-k="mode">DEG/RAD</button>
+<button class="equal" data-k="=">=</button>
+
+</div>
+
+<div class="history">
+<div class="history-title">
+<span>CALCULATION HISTORY</span>
+<button class="clear" data-k="clearhistory">Clear</button>
+</div>
+<div id="history">Your calculations will appear here.</div>
+</div>
+
+<footer>BINYAZ CALCULATOR · SCIENTIFIC EDITION</footer>
+
+</div>
+
+<script>
+"use strict";
+
+let expr="";
+let deg=true;
+let lastAnswer=0;
+let history=[];
+
+const el=id=>document.getElementById(id);
+
+function show(){
+el("expression").textContent=expr||"0";
+el("mode").textContent=(deg?"DEG":"RAD")+" · SCIENTIFIC";
+}
+
+function add(v){
+expr+=v;
+show();
+}
+
+function factorial(n){
+if(!Number.isInteger(n)||n<0||n>170)
+throw Error("Invalid factorial");
+let r=1;
+for(let i=2;i<=n;i++)r*=i;
+return r;
+}
+
+function tokenize(s){
+const t=[];
+let i=0;
+while(i<s.length){
+if(/\s/.test(s[i])){i++;continue;}
+const rest=s.slice(i);
+let m=rest.match(/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i);
+if(m){
+t.push({type:"number",value:Number(m[0])});
+i+=m[0].length;
+continue;
+}
+m=rest.match(/^[a-zA-Z]+/);
+if(m){
+t.push({type:"name",value:m[0]});
+i+=m[0].length;
+continue;
+}
+if("+-*/^()%!".includes(s[i])){
+t.push({type:s[i],value:s[i]});
+i++;
+continue;
+}
+throw Error("Invalid character");
+}
+return t;
+}
+
+function evaluate(s){
+const tokens=tokenize(s);
+let pos=0;
+const peek=()=>tokens[pos];
+const take=()=>tokens[pos++];
+
+const funcs={
+sin:x=>Math.sin(deg?x*Math.PI/180:x),
+cos:x=>Math.cos(deg?x*Math.PI/180:x),
+tan:x=>Math.tan(deg?x*Math.PI/180:x),
+asin:x=>deg?Math.asin(x)*180/Math.PI:Math.asin(x),
+acos:x=>deg?Math.acos(x)*180/Math.PI:Math.acos(x),
+atan:x=>deg?Math.atan(x)*180/Math.PI:Math.atan(x),
+sqrt:Math.sqrt,
+cbrt:Math.cbrt,
+log:Math.log10,
+ln:Math.log
+};
+
+function primary(){
+const t=take();
+if(!t)throw Error("Incomplete expression");
+if(t.type==="number")return t.value;
+if(t.type==="-")return -primary();
+if(t.type==="+")return primary();
+
+if(t.type==="("){
+const v=addition();
+if(!peek()||take().type!==")")
+throw Error("Missing )");
+return v;
+}
+
+if(t.type==="name"){
+if(t.value==="pi")return Math.PI;
+if(t.value==="e")return Math.E;
+if(t.value==="ans")return lastAnswer;
+
+if(funcs[t.value]){
+if(!peek()||take().type!=="(")
+throw Error("Missing (");
+const v=addition();
+if(!peek()||take().type!==")")
+throw Error("Missing )");
+return funcs[t.value](v);
+}
+}
+throw Error("Invalid expression");
+}
+
+function power(){
+let v=primary();
+if(peek()&&peek().type==="^"){
+take();
+v=Math.pow(v,power());
+}
+while(peek()&&["!","%"].includes(peek().type)){
+const op=take().type;
+v=op==="!"?factorial(v):v/100;
+}
+return v;
+}
+
+function multiplication(){
+let v=power();
+while(peek()&&["*","/"].includes(peek().type)){
+const op=take().type;
+const r=power();
+v=op==="*"?v*r:v/r;
+}
+return v;
+}
+
+function addition(){
+let v=multiplication();
+while(peek()&&["+","-"].includes(peek().type)){
+const op=take().type;
+const r=multiplication();
+v=op==="+"?v+r:v-r;
+}
+return v;
+}
+
+const result=addition();
+if(pos!==tokens.length||!Number.isFinite(result))
+throw Error("Undefined result");
+return result;
+}
+
+function calculate(){
+if(!expr)return;
+try{
+const value=evaluate(expr);
+lastAnswer=value;
+const answer=Number(value.toPrecision(12)).toString();
+el("result").textContent=answer;
+history.unshift(expr+" = "+answer);
+history=history.slice(0,20);
+renderHistory();
+}catch(e){
+el("result").textContent="Error";
+}
+}
+
+function renderHistory(){
+const box=el("history");
+box.replaceChildren();
+if(!history.length){
+box.textContent="Your calculations will appear here.";
+return;
+}
+history.forEach(item=>{
+const row=document.createElement("div");
+row.className="history-item";
+row.textContent=item;
+box.appendChild(row);
+});
+}
+
+el("keys").addEventListener("click",event=>{
+const b=event.target.closest("button");
+if(!b)return;
+
+const k=b.dataset.k;
+const f=b.dataset.f;
+
+if(k==="AC"){
+expr="";
+el("result").textContent="0";
+show();
+return;
+}
+if(k==="DEL"){
+expr=expr.slice(0,-1);
+show();
+return;
+}
+if(k==="clearhistory"){
+history=[];
+renderHistory();
+return;
+}
+if(k==="mode"){
+deg=!deg;
+show();
+return;
+}
+if(k==="="){
+calculate();
+return;
+}
+if(k==="square"){add("^2");return;}
+if(k==="pi"){add("pi");return;}
+if(k==="e"){add("e");return;}
+if(k==="ans"){add("ans");return;}
+if(k==="sign"){add("-");return;}
+if(k==="inv"){add("1/(");return;}
+if(f){add(f+"(");return;}
+if(k)add(k);
+});
+
+if("serviceWorker" in navigator){
+window.addEventListener("load",()=>{
+navigator.serviceWorker.register("./sw.js")
+.catch(err=>console.log(err));
+});
+}
+
+show();
+</script>
+</body>
+</html>
