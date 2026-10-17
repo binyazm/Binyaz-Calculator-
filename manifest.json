@@ -1,6 +1,6 @@
 {
   "name": "Binyaz Calculator",
-  "short_name": "Binyaz",
+  "short_name": "Binyaz Calculator",
   "description": "Binyaz Scientific Calculator",
   "id": "./",
   "start_url": "./index.html",
